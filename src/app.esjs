@@ -1,22 +1,48 @@
-importar { Terminal } desde '@es-js/terminal'
+importar { Terminal } desde "@es-js/terminal"
+importar { obtenerJson } desde "https://desarrollo-aplicaciones.vercel.app/2024/code/obtener-json.js"
+importar { validarSecreto } desde "https://desarrollo-aplicaciones.vercel.app/2024/code/validar-secreto.js"
 
 asincrono funcion inicio() {
-	Terminal.limpiar()
-
-	Terminal.escribir('Ingresa un valor:')
-
-	const resultado = esperar Terminal.leer()
-
-	Terminal.escribir({
-		Resultado: resultado,
-		Tipo: tipoDe resultado,
-	})
-
-	Terminal.escribir('Presiona ENTER para volver a iniciar')
-
-	esperar Terminal.leerEnter()
-
-	esperar inicio()
+    Terminal.limpiar();
+    
+    Terminal.escribir('Trabajo Integrador Final');
+    Terminal.escribir('Precio del Dólar Blue Hoy');
+    Terminal.escribir('');
+    
+    Terminal.escribir('Ingrese su DNI:');
+    const dni = esperar Terminal.leerCadena();
+    
+    Terminal.escribir('Ingrese su palabra secreta:');
+    const palabraSecreta = esperar Terminal.leerSecreto();
+    
+    Terminal.escribir('');
+    Terminal.escribir('Validando acceso...');
+    
+    const accesoCorrecto = esperar validarSecreto(dni, palabraSecreta);
+    
+    si (accesoCorrecto) {
+        Terminal.limpiar();
+        
+        Terminal.escribir('Acceso correcto.');
+        Terminal.escribir('Consultando precio del Dólar Blue...');
+        Terminal.escribir('');
+        
+        const dolarBlue = esperar obtenerJson('https://dolarapi.com/v1/dolares/blue');
+        
+        const compra = dolarBlue.compra;
+        const venta = dolarBlue.venta;
+        const promedio = (compra + venta) / 2;
+        
+        Terminal.escribir('Cotización Dólar Blue');
+        Terminal.escribir('----------------------');
+        Terminal.escribir(`Compra: $${compra}`);
+        Terminal.escribir(`Venta: $${venta}`);
+        Terminal.escribir(`Promedio: $${promedio}`);
+        Terminal.escribir(`Fecha de actualización: ${dolarBlue.fechaActualizacion}`);
+    } sino {
+        Terminal.escribir('');
+        Terminal.escribir('Acceso denegado. DNI o palabra secreta incorrecta.');
+    }
 }
 
-inicio()
+esperar inicio();
